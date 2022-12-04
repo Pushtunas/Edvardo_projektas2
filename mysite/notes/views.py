@@ -1,34 +1,37 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-
+from django.views.decorators.csrf import csrf_protect
+from django.contrib.auth.decorators import login_required
 from .models import Irasas
-from .forms import IrasoKurimoForma, IrasoAtnaujinimoForma
+from .forms import IrasoKurimoForma, IrasoAtnaujinimoForma, ProfilioRedagavimoForma
+from django.db.models import Q
 # Create your views here.
 
 def index(request):
     return render(request, 'notes/index.html')
 
+@login_required
 def main(request):
     irasai = Irasas.objects.all()
-    forma = IrasoKurimoForma()
+    form = IrasoKurimoForma()
     if request.method == 'POST':
-        forma = IrasoKurimoForma(request.POST)
-        if forma.is_valid():
-            irasas = forma.save(commit=False)
+        form = IrasoKurimoForma(request.POST)
+        if form.is_valid():
+            irasas = form.save(commit=False)
             irasas.vartotojas = request.user
             irasas.save()
             return redirect('main')
 
     context = {
         'irasai': irasai,
-        'forma': forma
+        'form': form
     }
     return render(request, 'notes/main.html', context)
 
+@csrf_protect
 def register(request):
     form = UserCreationForm()
-
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -41,36 +44,52 @@ def register(request):
     }
     return render(request, 'registration/register.html', context)
 
-# def login(request):
-#     return render(request, 'registration/login.html')
-
+@login_required
 def profile(request):
-    return render(request, 'registration/profile.html')
+    if request.method == 'POST':
+        form = ProfilioRedagavimoForma(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+        messages.success(request, 'Vartotojo informacija atnaujinta sėkmingai.')
+        return redirect('profile')
+    else:
+        form = ProfilioRedagavimoForma(instance=request.user)
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'registration/profile.html', context)
 
 def logout(request):
     return render(request, 'registration/logout.html')
 
+@login_required
 def update(request, id):
     atnaujinti_irasa = Irasas.objects.get(id=id)
-    forma = IrasoAtnaujinimoForma(instance=atnaujinti_irasa)
+    form = IrasoAtnaujinimoForma(instance=atnaujinti_irasa)
 
     if request.method == 'POST':
-        forma = IrasoAtnaujinimoForma(request.POST)
-        if forma.is_valid():
-            atnaujinti_irasa.pavadinimas = forma.cleaned_data['pavadinimas']
-            atnaujinti_irasa.tekstas = forma.cleaned_data['tekstas']
-            atnaujinti_irasa.kategorija = forma.cleaned_data['kategorija']
+        form = IrasoAtnaujinimoForma(request.POST)
+        if form.is_valid():
+            atnaujinti_irasa.pavadinimas = form.cleaned_data['pavadinimas']
+            atnaujinti_irasa.tekstas = form.cleaned_data['tekstas']
+            atnaujinti_irasa.kategorija = form.cleaned_data['kategorija']
             atnaujinti_irasa.save()
             return redirect('main')
 
     context = {
         'irasas': atnaujinti_irasa,
-        'forma': forma
+        'form': form
     }
     return render(request, 'notes/update.html', context)
 
+@login_required
 def delete(request, id):
     trinti_irasa = Irasas.objects.get(id=id)
     trinti_irasa.delete()
     return redirect('main')
 
+def search(request):
+    query = request.GET.get('query')
+    search_results = Irasas.objects.filter(Q(pavadinimas__icontains=query) | Q(tekstas__icontains=query))
+    return render(request, 'notes/search.html', {'irasai': search_results, 'query': query})

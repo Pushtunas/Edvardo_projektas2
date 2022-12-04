@@ -13,10 +13,10 @@ class IrasoAtnaujinimoForma(forms.ModelForm):
         model = Irasas
         fields = ['pavadinimas', 'tekstas', 'kategorija']
 
-# class PaskyrosNustatymoForma(forms.ModelForm):
-#     class Meta:
-#         model = User
-#         fields = ['username', 'first_name', 'last_name']
+class ProfilioRedagavimoForma(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']
 
 # class ProfilisAtnaujinimoForma(forms.ModelForm):
 #     class Meta:
