@@ -1,5 +1,6 @@
-from django.shortcuts import render
-
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
 # Create your views here.
 
 def index(request):
@@ -9,10 +10,22 @@ def main(request):
     return render(request, 'notes/main.html')
 
 def register(request):
-    return render(request, 'registration/register.html')
+    form = UserCreationForm()
 
-def login(request):
-    return render(request, 'registration/login.html')
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Paskyra sukurta sėkmingai')
+            return redirect('login')
+
+    context = {
+        'form': form
+    }
+    return render(request, 'registration/register.html', context)
+
+# def login(request):
+#     return render(request, 'registration/login.html')
 
 def profile(request):
     return render(request, 'registration/profile.html')
