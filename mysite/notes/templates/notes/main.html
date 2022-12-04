@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container">
+    <br>
+    <h1>Mano įrašai</h1>
+    <div class="notes">
+        {% for irasas in irasai %}
+        <div class="note">
+            <h2 class="text-info">{{ irasas.pavadinimas }}</h2>
+            <p>{{ irasas.tekstas}}</p>
+            <p>{{ irasas.kategorija}}</p>
+            <div class="options">
+                <a href="/update/{{ irasas.id }}/" class="btn btn-success btn-sm">Redaguoti</a>
+                <a href="/delete/{{ irasas.id }}/" class="btn btn-danger btn-sm">Ištrinti</a>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+<div class="add-modal" id="add-modal">
+    <div class="form">
+        <form action="" method="post">
+            {% csrf_token %}
+            <h3>Pridėti įrašą</h3>
+            {{ forma | crispy }}
+<!--            <div class="form-group">-->
+<!--                <label for="pavadinimas">Pavadinimas</label>-->
+<!--                <input type="text" name="pavadinimas" id="pavadinimas" class="form-control">-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="tekstas">Tekstas</label>-->
+<!--                <textarea name="tekstas" id="tekstas" class="form-control" rows="5"></textarea>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="kategorija">Kategorija</label>-->
+<!--                <textarea name="kategorija" id="kategorija" class="form-control" rows="1"></textarea>-->
+<!--            </div>-->
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-sm">Išsaugoti</button>
+                <button type="button" class="btn btn-danger close-btn btn-sm" onclick="closeModal('add-modal')">Atšaukti</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
