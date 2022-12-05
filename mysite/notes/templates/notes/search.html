@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Užrašinė - Paieškos rezultatai
+{% endblock %}
+
+{% block content %}
+<h1>Paieškos pagal {{query}} rezultatai: </h1>
+{% if main %}
+<ul>
+  {% for irasas in main %}
+  <li>
+    <a href="{% url 'main' irasas.id %}">{{irasas.title}}</a> ({{book.author}})
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>Nieko neradome :(</p>
+{% endif %}
+{% endblock %}
+
