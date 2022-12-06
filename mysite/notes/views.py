@@ -89,7 +89,8 @@ def delete(request, id):
     trinti_irasa.delete()
     return redirect('main')
 
+@login_required
 def search(request):
     query = request.GET.get('query')
-    search_results = Irasas.objects.filter(Q(pavadinimas__icontains=query) | Q(tekstas__icontains=query))
-    return render(request, 'notes/search.html', {'irasai': search_results, 'query': query})
+    search_results = Irasas.objects.filter(Q(pavadinimas__icontains=query) | Q(tekstas__icontains=query) | Q(kategorija__icontains=query))
+    return render(request, 'notes/search.html', {'main': search_results, 'query': query})

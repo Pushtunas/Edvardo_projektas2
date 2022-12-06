@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% block title %}Užrašinė - Profilis{% endblock title %}
 {% block content %}
 
 <div class="container">
@@ -15,7 +16,6 @@
             {{ form | crispy }}
             <button type="submit" class="btn-info btn">Išsaugoti</button>
             <a href="{% url 'main' %}" class="btn btn-secondary">Atšaukti</a>
-
         </form>
     </div>
 </div>

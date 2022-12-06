@@ -7,9 +7,9 @@
     <div class="notes">
         {% for irasas in irasai %}
         <div class="note">
-            <h2 class="text-info">{{ irasas.pavadinimas }}</h2>
-            <p>{{ irasas.tekstas}}</p>
-            <p>{{ irasas.kategorija}}</p>
+            <h2 class="text-info fw-light">{{ irasas.pavadinimas }}</h2>
+            <p class="fw-light">{{ irasas.tekstas }}</p>
+            <p class="fw-light">{{ irasas.kategorija }}</p>
             <div class="options">
                 <a href="/update/{{ irasas.id }}/" class="btn btn-success btn-sm">Redaguoti</a>
                 <a href="/delete/{{ irasas.id }}/" class="btn btn-danger btn-sm">Ištrinti</a>

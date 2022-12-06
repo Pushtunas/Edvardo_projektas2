@@ -1,22 +1,26 @@
 {% extends 'base.html' %}
+{% block title %}Užrašinė - Pieškos rezultatai{% endblock title %}
 {% load static %}
-
-{% block title %}
-Užrašinė - Paieškos rezultatai
-{% endblock %}
-
 {% block content %}
-<h1>Paieškos pagal {{query}} rezultatai: </h1>
-{% if main %}
-<ul>
-  {% for irasas in main %}
-  <li>
-    <a href="{% url 'main' irasas.id %}">{{irasas.title}}</a> ({{book.author}})
-  </li>
-  {% endfor %}
-</ul>
-{% else %}
-<p>Nieko neradome :(</p>
-{% endif %}
+<div class="container">
+    <br>
+    <h1>Paieškos pagal "{{ query }}" rezultatai:</h1>
+    <div class="notes">
+        {% if main %}
+        <ul class="nobull">
+            {% for irasas in main %}
+            <li>
+                <p class="text-info fw-light">{{ irasas.pavadinimas }}</p>
+                <p class="fw-light">{{ irasas.tekstas }}</p>
+                <p class="fw-light">{{ irasas.kategorija }}</p>
+            </li>
+            <hr>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <br>
+        <h1>Nieko neradome :(</h1>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
-

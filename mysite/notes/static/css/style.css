@@ -56,3 +56,7 @@ body{
 #time {
     padding: 8px;
 }
+
+.nobull {
+  list-style-type: none;
+}
